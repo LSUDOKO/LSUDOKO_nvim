@@ -6,7 +6,7 @@ A fast, modular Neovim configuration built on `lazy.nvim`.
 
 <samp>
 
-**~31 ms startup** &nbsp;·&nbsp; **41 plugins** &nbsp;·&nbsp; **13 language servers** &nbsp;·&nbsp; **Neovim 0.11+**
+**~31 ms startup** &nbsp;·&nbsp; **42 plugins** &nbsp;·&nbsp; **13 language servers** &nbsp;·&nbsp; **Neovim 0.11+**
 
 </samp>
 
@@ -82,7 +82,8 @@ Check that everything is wired up correctly:
     ├── servers               One file per language server, plus efm
     └── utils
         ├── diagnostics.lua   Diagnostic signs, virtual text and float styling
-        └── lsp.lua           Buffer-local LSP keymaps, set on LspAttach
+        ├── lsp.lua           Buffer-local LSP keymaps, set on LspAttach
+        └── runner.lua        Compile-and-run for the current file
 ```
 
 Adding a plugin means dropping a new file into `lua/plugins/` — `lazy.nvim` imports the whole
@@ -164,6 +165,38 @@ Buffer-local; active once a language server attaches.
 | `<leader>sv` / `<leader>sh` | Split vertically / horizontally |
 | `<leader>bd` | Delete buffer, keep the window layout |
 
+### Terminal & running code
+
+| Key | Action |
+| :--- | :--- |
+| <kbd>Ctrl</kbd>+<kbd>\\</kbd> | Toggle the floating terminal (works from any mode) |
+| `<leader>tf` / `<leader>th` / `<leader>tv` | Terminal — float / horizontal / vertical |
+| `<leader>t1` … `<leader>t3` | Numbered terminals, kept side by side |
+| `<leader>tt` | Plain terminal in a split |
+| `<leader>tg` | Lazygit |
+| `<leader>rr` | **Run the current file** |
+| <kbd>Esc</kbd> or <kbd>Esc</kbd><kbd>Esc</kbd> | Leave terminal mode |
+| <kbd>q</kbd> | Close a finished run window (normal mode) |
+
+`<leader>rr` saves the buffer, compiles it if the language needs compiling, and runs it in a
+terminal split — so programs that read **stdin still work**, and a failed compile stops before
+running. Binaries are written to Neovim's cache directory, never beside your source.
+
+| Filetype | Command |
+| :--- | :--- |
+| C | `gcc -Wall -O2` |
+| C++ | `g++ -std=c++17 -Wall -O2` |
+| Rust | `rustc` |
+| Go | `go run` |
+| Java | `javac` then `java` |
+| Python | `python3 -u` |
+| JavaScript | `node` |
+| TypeScript | `npx tsx` |
+| Bash | `bash` |
+| Lua | `lua` |
+
+Add or change a language by editing the `commands` table in `lua/utils/runner.lua`.
+
 ### Toggles
 
 | Key | Action |
@@ -220,6 +253,7 @@ To turn it off:
 - [which-key.nvim](https://github.com/folke/which-key.nvim) — keybinding hints
 - [trouble.nvim](https://github.com/folke/trouble.nvim) — diagnostics list
 - [todo-comments.nvim](https://github.com/folke/todo-comments.nvim) — highlight TODO/FIXME
+- [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) — persistent toggleable terminals
 
 </details>
 

@@ -81,3 +81,12 @@ map("n", "<leader>ud", function()
 	vim.diagnostic.enable(not enabled)
 	vim.notify("Diagnostics " .. (enabled and "disabled" or "enabled"))
 end, { desc = "Toggle diagnostics" })
+
+-- Terminal
+map("n", "<leader>tt", "<Cmd>botright 15split | terminal<CR>", { desc = "Terminal (split)" })
+map("n", "<leader>tT", "<Cmd>tabnew | terminal<CR>", { desc = "Terminal (new tab)" })
+
+-- Run the current file
+map("n", "<leader>rr", function()
+	require("utils.runner").run()
+end, { desc = "Run current file" })
