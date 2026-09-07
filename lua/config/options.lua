@@ -11,7 +11,7 @@ vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8 -- Keep 8 columns left/right of cursor
 vim.opt.wrap = false -- Don't wrap lines
 vim.opt.cmdheight = 1 -- Command line height
-vim.opt.spelllang = { "en", "de" } -- Set language for spellchecking
+vim.opt.spelllang = { "en" } -- Spellcheck language (add "de" etc. to extend)
 
 -- Tabbing / Indentation
 vim.opt.tabstop = 2 -- Tab width
@@ -87,7 +87,7 @@ vim.opt.wildignorecase = true -- Case-insensitive tab completion in commands
 -- Cursor Settings
 vim.opt.guicursor = {
 	"n-v-c:block", -- Normal, Visual, Command-line
-	"i-ci-ve:block", -- Insert, Command-line Insert, Visual-exclusive
+	"i-ci-ve:ver25", -- Insert, Command-line Insert, Visual-exclusive
 	"r-cr:hor20", -- Replace, Command-line Replace
 	"o:hor50", -- Operator-pending
 	"a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor", -- All modes: blinking & highlight groups
@@ -102,3 +102,44 @@ vim.opt.foldlevel = 99 -- Keep all folds open by default
 -- Split Behavior
 vim.opt.splitbelow = true -- Horizontal splits open below
 vim.opt.splitright = true -- Vertical splits open to the right
+
+-- Invisible Characters
+vim.opt.list = true -- Show whitespace characters
+vim.opt.listchars = {
+	tab = "» ", -- Tab
+	trail = "·", -- Trailing space
+	nbsp = "␣", -- Non-breaking space
+	extends = "›", -- Line continues beyond the right edge
+	precedes = "‹", -- Line continues beyond the left edge
+}
+vim.opt.fillchars = {
+	eob = " ", -- Hide the '~' on lines past the end of the buffer
+	fold = " ",
+	foldopen = "", -- chevron-down
+	foldclose = "", -- chevron-right
+	foldsep = " ",
+	diff = "╱",
+}
+
+-- Command line & messages
+vim.opt.shortmess:append("cI") -- Trim completion messages, skip the intro screen
+vim.opt.confirm = true -- Prompt to save instead of failing on :q with changes
+vim.opt.title = true -- Set the terminal window title
+
+-- Session & window
+vim.opt.sessionoptions = { "buffers", "curdir", "folds", "tabpages", "winsize" }
+vim.opt.jumpoptions = "view" -- Restore the view when jumping through the jumplist
+vim.opt.virtualedit = "block" -- Let visual block selections extend past line ends
+vim.opt.inccommand = "split" -- Live preview of :substitute in a split
+vim.opt.splitkeep = "screen" -- Keep the text stable when opening a split
+
+-- Folding presentation
+vim.opt.foldtext = "" -- Keep syntax highlighting on the folded line
+vim.opt.foldlevelstart = 99 -- Start with every fold open
+
+-- Mason installs its binaries under a private prefix. Put them on Neovim's PATH so the
+-- language servers, linters and formatters resolve without depending on the shell profile.
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+if vim.fn.isdirectory(mason_bin) == 1 and not vim.env.PATH:find(mason_bin, 1, true) then
+	vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+end

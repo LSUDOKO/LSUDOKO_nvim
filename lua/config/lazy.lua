@@ -1,9 +1,9 @@
 -- ================================================================================================
--- TITLE : lazy.nvim Bootstrap & Plugin Setup
+-- TITLE : lazy.nvim bootstrap & plugin setup
 -- ABOUT :
---   bootstraps the 'lazy.nvim' plugin manager by cloning it if not present, prepends it to the
---   runtime path, and then loads core configuration files (globals, options, keymaps, autocmds).
---   Last, initialises 'lazy.nvim' with plugins.
+--   Bootstraps the 'lazy.nvim' plugin manager by cloning it if not present, prepends it to the
+--   runtime path, then loads the core configuration (globals, options, keymaps, autocmds) before
+--   initialising lazy.nvim with the plugin specs under 'lua/plugins'.
 -- LINKS :
 --   > lazy.nvim github  : https://github.com/folke/lazy.nvim
 --   > lazy.nvim website : https://lazy.folke.io/installation
@@ -26,28 +26,40 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Leader keys must be set before any plugin defines a mapping.
 require("config.globals")
 require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 
-local plugins_dir = "plugins"
-
 require("lazy").setup({
 	spec = {
-		{ import = plugins_dir },
-	},
-	rtp = {
-		disabled_plugins = {
-			"netrw",
-			"netrwPlugin",
-		},
+		{ import = "plugins" },
 	},
 	install = {
-		colorscheme = {
-			-- "melange"
-			"nightfox,",
+		colorscheme = { "duskfox", "habamax" },
+	},
+	checker = {
+		enabled = true,
+		notify = false, -- check for updates silently; don't interrupt
+	},
+	change_detection = {
+		notify = false,
+	},
+	ui = {
+		border = "rounded",
+	},
+	performance = {
+		rtp = {
+			disabled_plugins = {
+				"gzip",
+				"netrw",
+				"netrwPlugin",
+				"tarPlugin",
+				"tohtml",
+				"tutor",
+				"zipPlugin",
+			},
 		},
 	},
-	checker = { enabled = true },
 })
